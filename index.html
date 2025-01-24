@@ -1,269 +1,459 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>24</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+      @import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f8ff;
-            color: #333;
-            text-align: center;
-            padding: 50px;
-        }
-        .question {
-            margin: 50px 0;
-            opacity: 0;
-            font-family: 'Pacifico', cursive;
-            font-size: 1.5em;
-            color: #ff4081;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s;
-        }
-        .question:hover {
-            transform: scale(1.05);
-        }
-        .button {
-            background-color: #ff4081;
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.2em;
-        }
-        .button:hover {
-            background-color: #ce1b57;
-            transition: 0.28s;
-            box-shadow: #333 0 0 10px;
-        }
-        .hidden {
-            display: none;
-        }
-        .answer-button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            margin: 10px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-        .answer-button:hover {
-            background-color: #45a049;
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        .disabled {
-            pointer-events: none;
-        }
-        .letter-button {
-            background-color: #2196F3;
-            color: white;
-            padding: 10px 20px;
-            margin: 5px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-        .letter-button:hover {
-            background-color: #1976D2;
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        .letter {
-            font-size: 2em;
-            margin: 0 10px;
-        }
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f0f8ff;
+        color: #333;
+        text-align: center;
+        padding: 50px;
+      }
+      .question {
+        margin: 50px 0;
+        opacity: 0;
+        font-family: "Pacifico", cursive;
+        font-size: 1.5em;
+        color: #ff4081;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s;
+      }
+      .question:hover {
+        transform: scale(1.05);
+      }
+      .button {
+        background-color: #ff4081;
+        color: white;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.2em;
+      }
+      .button:hover {
+        background-color: #ce1b57;
+        transition: 0.28s;
+        box-shadow: #333 0 0 10px;
+      }
+      .hidden {
+        display: none;
+      }
+      .answer-button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.3s, transform 0.3s;
+      }
+      .answer-button:hover {
+        background-color: #45a049;
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+      .disabled {
+        pointer-events: none;
+      }
+      .letter-button {
+        background-color: #2196f3;
+        color: white;
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.3s, transform 0.3s;
+      }
+      .letter-button:hover {
+        background-color: #1976d2;
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+      .letter {
+        font-size: 2em;
+        margin: 0 10px;
+      }
+
+      #answersFound {
+        background-color: #f9f9f9;
+        border: 2px solid #ff4081;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      #answersFound h2 {
+        font-family: "Pacifico", cursive;
+        color: #ff4081;
+        margin-bottom: 10px;
+      }
+
+      #answersList {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      #answersList li {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        font-size: 1.2em;
+        color: #333;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      #answersList li:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>24 ~ AD FINEM</h1>
-    <button class="button" onclick="startAdventure()">Commencer l'aventure</button>
+    <button class="button" onclick="startAdventure()">
+      Commencer l'aventure
+    </button>
     <div id="questions" class="hidden">
-        <div class="question" id="q1">
-            <h2>Enigme 1 : Quel est le plus grand désert du monde ?</h2>
-            <button class="answer-button" onclick="checkAnswer('q1', 'A', this)">A. Sahara</button>
-            <button class="answer-button" onclick="checkAnswer('q1', 'B', this)">B. Gobi</button>
-            <button class="answer-button" onclick="checkAnswer('q1', 'C', this)">C. Kalahari</button>
-            <button class="answer-button" onclick="checkAnswer('q1', 'D', this)">D. Antarctique</button>
-        </div>
-        <div class="question hidden" id="q2">
-            <h2>Enigme 2 : Quelle est la capitale de l'Italie ?</h2>
-            <button class="answer-button" onclick="checkAnswer('q2', 'A', this)">A. Milan</button>
-            <button class="answer-button" onclick="checkAnswer('q2', 'B', this)">B. Rome</button>
-            <button class="answer-button" onclick="checkAnswer('q2', 'C', this)">C. Naples</button>
-            <button class="answer-button" onclick="checkAnswer('q2', 'D', this)">D. Venise</button>
-        </div>
-        <div class="question hidden" id="q3">
-            <h2>Enigme 3 : Quelle est la plus grande planète du système solaire ?</h2>
-            <button class="answer-button" onclick="checkAnswer('q3', 'A', this)">A. Mars</button>
-            <button class="answer-button" onclick="checkAnswer('q3', 'B', this)">B. Terre</button>
-            <button class="answer-button" onclick="checkAnswer('q3', 'C', this)">C. Jupiter</button>
-            <button class="answer-button" onclick="checkAnswer('q3', 'D', this)">D. Saturne</button>
-        </div>
-        <div class="question hidden" id="q4">
-            <h2>Enigme 4 : Quelle est la langue la plus parlée au monde ?</h2>
-            <button class="answer-button" onclick="checkAnswer('q4', 'A', this)">A. Anglais</button>
-            <button class="answer-button" onclick="checkAnswer('q4', 'B', this)">B. Espagnol</button>
-            <button class="answer-button" onclick="checkAnswer('q4', 'C', this)">C. Hindi</button>
-            <button class="answer-button" onclick="checkAnswer('q4', 'D', this)">D. Chinois</button>
-        </div>
-        <div class="question hidden" id="q5">
-            <h2>Enigme 5 : Quelle est la capitale du Japon ?</h2>
-            <button class="answer-button" onclick="checkAnswer('q5', 'A', this)">A. Kyoto</button>
-            <button class="answer-button" onclick="checkAnswer('q5', 'B', this)">B. Osaka</button>
-            <button class="answer-button" onclick="checkAnswer('q5', 'C', this)">C. Tokyo</button>
-            <button class="answer-button" onclick="checkAnswer('q5', 'D', this)">D. Hiroshima</button>
-        </div>
-        <div class="question hidden" id="q6">
-            <h2>Enigme 6 : Quelle est la plus grande île du monde ?</h2>
-            <button class="answer-button" onclick="checkAnswer('q6', 'A', this)">A. Madagascar</button>
-            <button class="answer-button" onclick="checkAnswer('q6', 'B', this)">B. Groenland</button>
-            <button class="answer-button" onclick="checkAnswer('q6', 'C', this)">C. Nouvelle-Guinée</button>
-            <button class="answer-button" onclick="checkAnswer('q6', 'D', this)">D. Bornéo</button>
-        </div>
+      <div class="question" id="q1">
+        <h2>Enigme 1 : Quel métier exerçait la mère de SCH ?</h2>
+        <button class="answer-button" onclick="checkAnswer('q1', 'A', this)">
+          A. Infirmière
+        </button>
+        <button class="answer-button" onclick="checkAnswer('q1', 'B', this)">
+          B. Enseignante
+        </button>
+        <button class="answer-button" onclick="checkAnswer('q1', 'C', this)">
+          C. Auxiliaire
+        </button>
+        <button class="answer-button" onclick="checkAnswer('q1', 'D', this)">
+          D. Femme au foyer
+        </button>
+      </div>
+      <div class="question hidden" id="q2">
+        <h2>
+          Enigme 2 : Quel surnom donné à SCH par ses fans est inspiré d'un
+          personnage animé célèbre portant un bandana rouge ?
+        </h2>
+        <button class="answer-button" onclick="checkAnswer('q2', 'A', this)">
+          A. Le S
+        </button>
+        <button class="answer-button" onclick="checkAnswer('q2', 'B', this)">
+          B. Tony Montana
+        </button>
+        <button class="answer-button" onclick="checkAnswer('q2', 'C', this)">
+          C. Yakuza
+        </button>
+        <button class="answer-button" onclick="checkAnswer('q2', 'D', this)">
+          D. Goku
+        </button>
+      </div>
+      <div class="question hidden" id="q3">
+        <h2>
+          Enigme 3 : Quel est le titre du projet de SCH dont le nom signifie
+          "Avec la faveur de Dieu" ?
+        </h2>
+        <button class="answer-button" onclick="checkAnswer('q3', 'A', this)">
+          A. Giulio
+        </button>
+        <button class="answer-button" onclick="checkAnswer('q3', 'B', this)">
+          B. Ad Finem
+        </button>
+        <button class="answer-button" onclick="checkAnswer('q3', 'C', this)">
+          C. Authobahn
+        </button>
+        <button class="answer-button" onclick="checkAnswer('q3', 'D', this)">
+          D. Deo Favente
+        </button>
+      </div>
+      <div class="question hidden" id="q4">
+        <h2>
+          Enigme 4 : Avec quel artiste SCH collabore-t-il sur l'album surnommé
+          "Absolu" ?
+        </h2>
+        <button class="answer-button" onclick="checkAnswer('q4', 'A', this)">
+          A. Lacrim
+        </button>
+        <button class="answer-button" onclick="checkAnswer('q4', 'B', this)">
+          B. Ninho
+        </button>
+        <button class="answer-button" onclick="checkAnswer('q4', 'C', this)">
+          C. Jul
+        </button>
+        <button class="answer-button" onclick="checkAnswer('q4', 'D', this)">
+          D. Gims
+        </button>
+      </div>
+      <div class="question hidden" id="q5">
+        <h2>
+          Enigme 5 : Dans quel quartier italien a été tourné le clip "Gomorra"
+          de SCH ?
+        </h2>
+        <button class="answer-button" onclick="checkAnswer('q5', 'A', this)">
+          A. Tiburtino
+        </button>
+        <button class="answer-button" onclick="checkAnswer('q5', 'B', this)">
+          B. Sanita
+        </button>
+        <button class="answer-button" onclick="checkAnswer('q5', 'C', this)">
+          C. Scampia
+        </button>
+        <button class="answer-button" onclick="checkAnswer('q5', 'D', this)">
+          D. Corviale
+        </button>
+      </div>
+      <div class="question hidden" id="q6">
+        <h2>
+          Enigme 6 : Dans le clip "Anarchie", de quelle inspiration provient la
+          séquence du "bain de sang" ?
+        </h2>
+        <button class="answer-button" onclick="checkAnswer('q6', 'A', this)">
+          A. Eminem
+        </button>
+        <button class="answer-button" onclick="checkAnswer('q6', 'B', this)">
+          B. Jean Reno
+        </button>
+        <button class="answer-button" onclick="checkAnswer('q6', 'C', this)">
+          C. IAM
+        </button>
+        <button class="answer-button" onclick="checkAnswer('q6', 'D', this)">
+          D. Freeze Corleone
+        </button>
+      </div>
     </div>
 
     <div id="hangman" class="hidden">
-        <h2>Devinez le mot secret :</h2>
-        <div id="word">
-            <span class="letter">_</span>
-            <span class="letter">_</span>
-            <span class="letter">_</span>
-            <span class="letter">_</span>
-            <span class="letter">_</span>
-            <span class="letter">_</span>
-        </div>
-        <div id="letters">
-            <button class="letter-button" onclick="guessLetter('A', this)">A</button>
-            <button class="letter-button" onclick="guessLetter('B', this)">B</button>
-            <button class="letter-button" onclick="guessLetter('C', this)">C</button>
-            <button class="letter-button" onclick="guessLetter('D', this)">D</button>
-            <button class="letter-button" onclick="guessLetter('E', this)">E</button>
-            <button class="letter-button" onclick="guessLetter('F', this)">F</button>
-            <button class="letter-button" onclick="guessLetter('G', this)">G</button>
-            <button class="letter-button" onclick="guessLetter('H', this)">H</button>
-            <button class="letter-button" onclick="guessLetter('I', this)">I</button>
-            <button class="letter-button" onclick="guessLetter('J', this)">J</button>
-            <button class="letter-button" onclick="guessLetter('K', this)">K</button>
-            <button class="letter-button" onclick="guessLetter('L', this)">L</button>
-            <button class="letter-button" onclick="guessLetter('M', this)">M</button>
-            <button class="letter-button" onclick="guessLetter('N', this)">N</button>
-            <button class="letter-button" onclick="guessLetter('O', this)">O</button>
-            <button class="letter-button" onclick="guessLetter('P', this)">P</button>
-            <button class="letter-button" onclick="guessLetter('Q', this)">Q</button>
-            <button class="letter-button" onclick="guessLetter('R', this)">R</button>
-            <button class="letter-button" onclick="guessLetter('S', this)">S</button>
-            <button class="letter-button" onclick="guessLetter('T', this)">T</button>
-            <button class="letter-button" onclick="guessLetter('U', this)">U</button>
-            <button class="letter-button" onclick="guessLetter('V', this)">V</button>
-            <button class="letter-button" onclick="guessLetter('W', this)">W</button>
-            <button class="letter-button" onclick="guessLetter('X', this)">X</button>
-            <button class="letter-button" onclick="guessLetter('Y', this)">Y</button>
-            <button class="letter-button" onclick="guessLetter('Z', this)">Z</button>
-        </div>
+      <h2>Devinez le mot secret :</h2>
+      <div id="word">
+        <span class="letter">_</span>
+        <span class="letter">_</span>
+        <span class="letter">_</span>
+        <span class="letter">_</span>
+        <span class="letter">_</span>
+        <span class="letter">_</span>
+      </div>
+      <div id="letters">
+        <button class="letter-button" onclick="guessLetter('A', this)">
+          A
+        </button>
+        <button class="letter-button" onclick="guessLetter('B', this)">
+          B
+        </button>
+        <button class="letter-button" onclick="guessLetter('C', this)">
+          C
+        </button>
+        <button class="letter-button" onclick="guessLetter('D', this)">
+          D
+        </button>
+        <button class="letter-button" onclick="guessLetter('E', this)">
+          E
+        </button>
+        <button class="letter-button" onclick="guessLetter('F', this)">
+          F
+        </button>
+        <button class="letter-button" onclick="guessLetter('G', this)">
+          G
+        </button>
+        <button class="letter-button" onclick="guessLetter('H', this)">
+          H
+        </button>
+        <button class="letter-button" onclick="guessLetter('I', this)">
+          I
+        </button>
+        <button class="letter-button" onclick="guessLetter('J', this)">
+          J
+        </button>
+        <button class="letter-button" onclick="guessLetter('K', this)">
+          K
+        </button>
+        <button class="letter-button" onclick="guessLetter('L', this)">
+          L
+        </button>
+        <button class="letter-button" onclick="guessLetter('M', this)">
+          M
+        </button>
+        <button class="letter-button" onclick="guessLetter('N', this)">
+          N
+        </button>
+        <button class="letter-button" onclick="guessLetter('O', this)">
+          O
+        </button>
+        <button class="letter-button" onclick="guessLetter('P', this)">
+          P
+        </button>
+        <button class="letter-button" onclick="guessLetter('Q', this)">
+          Q
+        </button>
+        <button class="letter-button" onclick="guessLetter('R', this)">
+          R
+        </button>
+        <button class="letter-button" onclick="guessLetter('S', this)">
+          S
+        </button>
+        <button class="letter-button" onclick="guessLetter('T', this)">
+          T
+        </button>
+        <button class="letter-button" onclick="guessLetter('U', this)">
+          U
+        </button>
+        <button class="letter-button" onclick="guessLetter('V', this)">
+          V
+        </button>
+        <button class="letter-button" onclick="guessLetter('W', this)">
+          W
+        </button>
+        <button class="letter-button" onclick="guessLetter('X', this)">
+          X
+        </button>
+        <button class="letter-button" onclick="guessLetter('Y', this)">
+          Y
+        </button>
+        <button class="letter-button" onclick="guessLetter('Z', this)">
+          Z
+        </button>
+      </div>
+    </div>
+
+    <div id="answersFound" class="hidden">
+      <h2>Réponses trouvées :</h2>
+      <ul id="answersList"></ul>
     </div>
 
     <div id="finalMessage" class="hidden">
-        <h2>Bravo ! Tu as trouvé le mot secret : DISNEY</h2>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/k9bUTfFF3_4" frameborder="0" allowfullscreen></iframe>
+      <h2>Bravo ! Tu as trouvé le mot secret : DISNEY</h2>
+      <iframe
+        width="560"
+        height="315"
+        src="https://www.youtube.com/embed/k9bUTfFF3_4"
+        frameborder="0"
+        allowfullscreen
+      ></iframe>
     </div>
 
     <script>
-        let currentQuestion = 1;
-        const secretWord = "DISNEY";
-        let guessedLetters = Array(secretWord.length).fill('_');
+      let currentQuestion = 1;
+      const secretWord = "DISNEY";
+      let guessedLetters = Array(secretWord.length).fill("_");
 
-        function startAdventure() {
-            document.querySelector('.button').classList.add('hidden');
-            document.getElementById('questions').classList.remove('hidden');
-            gsap.to('.question', { opacity: 1, duration: 1 });
+      function startAdventure() {
+        document.querySelector(".button").classList.add("hidden");
+        document.getElementById("questions").classList.remove("hidden");
+        gsap.to(".question", { opacity: 1, duration: 1 });
+      }
+
+      function checkAnswer(questionId, letter, button) {
+        const correctAnswers = {
+          q1: "A",
+          q2: "C",
+          q3: "D",
+          q4: "B",
+          q5: "C",
+          q6: "A",
+        };
+
+        if (correctAnswers[questionId] === letter) {
+          gsap.to(document.getElementById(questionId), {
+            opacity: 0,
+            duration: 1,
+            onComplete: showNextQuestion,
+          });
+        } else {
+          disableButtons();
+          gsap.to(button, { backgroundColor: "#ff0000", duration: 0.5 });
+          setTimeout(() => {
+            gsap.to(button, { backgroundColor: "#4CAF50", duration: 0.5 });
+            enableButtons();
+          }, 2000);
         }
+      }
 
-        function checkAnswer(questionId, letter, button) {
-            const correctAnswers = {
-                q1: 'D',
-                q2: 'B',
-                q3: 'C',
-                q4: 'D',
-                q5: 'C',
-                q6: 'B'
-            };
+      function disableButtons() {
+        const buttons = document.querySelectorAll(".answer-button");
+        buttons.forEach((button) => button.classList.add("disabled"));
+      }
 
-            if (correctAnswers[questionId] === letter) {
-                gsap.to(document.getElementById(questionId), { opacity: 0, duration: 1, onComplete: showNextQuestion });
-            } else {
-                disableButtons();
-                gsap.to(button, { backgroundColor: "#ff0000", duration: 0.5 });
-                setTimeout(() => {
-                    gsap.to(button, { backgroundColor: "#4CAF50", duration: 0.5 });
-                    enableButtons();
-                }, 2000);
+      function enableButtons() {
+        const buttons = document.querySelectorAll(".answer-button");
+        buttons.forEach((button) => button.classList.remove("disabled"));
+      }
+
+      function showNextQuestion() {
+        document.getElementById(`q${currentQuestion}`).classList.add("hidden");
+        currentQuestion++;
+        const nextQuestion = document.getElementById(`q${currentQuestion}`);
+        if (nextQuestion) {
+          nextQuestion.classList.remove("hidden");
+          gsap.to(nextQuestion, { opacity: 1, duration: 1 });
+        } else {
+          document.getElementById("questions").classList.add("hidden");
+          document.getElementById("hangman").classList.remove("hidden");
+          document.getElementById("answersFound").classList.remove("hidden");
+          updateAnswersList();
+        }
+      }
+
+      function updateAnswersList() {
+        const correctAnswers = {
+          q1: "Infirmière",
+          q2: "Yakuza",
+          q3: "Deo Favente",
+          q4: "Ninho",
+          q5: "Scampia",
+          q6: "Eminem",
+        };
+        const answersList = document.getElementById("answersList");
+        answersList.innerHTML = "";
+        for (let i = 1; i <= 6; i++) {
+          const answerItem = document.createElement("li");
+          answerItem.textContent = `Enigme ${i} : ${correctAnswers[`q${i}`]}`;
+          answersList.appendChild(answerItem);
+        }
+      }
+
+      function guessLetter(letter, button) {
+        button.classList.add("disabled");
+        if (secretWord.includes(letter)) {
+          for (let i = 0; i < secretWord.length; i++) {
+            if (secretWord[i] === letter) {
+              guessedLetters[i] = letter;
             }
+          }
+          updateWordDisplay();
+          if (!guessedLetters.includes("_")) {
+            showFinalMessage();
+          }
+        } else {
+          gsap.to(button, { backgroundColor: "#ff0000", duration: 0.5 });
+          setTimeout(() => {
+            gsap.to(button, { backgroundColor: "#2196F3", duration: 0.5 });
+          }, 2000);
         }
+      }
 
-        function disableButtons() {
-            const buttons = document.querySelectorAll('.answer-button');
-            buttons.forEach(button => button.classList.add('disabled'));
-        }
+      function updateWordDisplay() {
+        const wordDisplay = document.getElementById("word");
+        wordDisplay.innerHTML = guessedLetters
+          .map((letter) => `<span class="letter">${letter}</span>`)
+          .join("");
+      }
 
-        function enableButtons() {
-            const buttons = document.querySelectorAll('.answer-button');
-            buttons.forEach(button => button.classList.remove('disabled'));
-        }
-
-        function showNextQuestion() {
-            document.getElementById(`q${currentQuestion}`).classList.add('hidden');
-            currentQuestion++;
-            const nextQuestion = document.getElementById(`q${currentQuestion}`);
-            if (nextQuestion) {
-                nextQuestion.classList.remove('hidden');
-                gsap.to(nextQuestion, { opacity: 1, duration: 1 });
-            } else {
-                document.getElementById('questions').classList.add('hidden');
-                document.getElementById('hangman').classList.remove('hidden');
-            }
-        }
-
-        function guessLetter(letter, button) {
-            button.classList.add('disabled');
-            if (secretWord.includes(letter)) {
-                for (let i = 0; i < secretWord.length; i++) {
-                    if (secretWord[i] === letter) {
-                        guessedLetters[i] = letter;
-                    }
-                }
-                updateWordDisplay();
-                if (!guessedLetters.includes('_')) {
-                    showFinalMessage();
-                }
-            } else {
-                gsap.to(button, { backgroundColor: "#ff0000", duration: 0.5 });
-                setTimeout(() => {
-                    gsap.to(button, { backgroundColor: "#2196F3", duration: 0.5 });
-                }, 2000);
-            }
-        }
-
-        function updateWordDisplay() {
-            const wordDisplay = document.getElementById('word');
-            wordDisplay.innerHTML = guessedLetters.map(letter => `<span class="letter">${letter}</span>`).join('');
-        }
-
-        function showFinalMessage() {
-            document.getElementById('hangman').classList.add('hidden');
-            document.getElementById('finalMessage').classList.remove('hidden');
-            gsap.to('#finalMessage', { opacity: 1, duration: 1 });
-        }
+      function showFinalMessage() {
+        document.getElementById("hangman").classList.add("hidden");
+        document.getElementById("finalMessage").classList.remove("hidden");
+        gsap.to("#finalMessage", { opacity: 1, duration: 1 });
+      }
     </script>
-</body>
+  </body>
 </html>
