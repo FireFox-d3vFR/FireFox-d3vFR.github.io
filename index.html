@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>24</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
@@ -118,6 +119,38 @@
       #answersList li:hover {
         transform: scale(1.05);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      #finalMessage {
+        background-color: #fff;
+        border: 2px solid #ff4081;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        transition: opacity 1s;
+      }
+
+      #finalMessage h2 {
+        font-family: "Pacifico", cursive;
+        color: #ff4081;
+        font-size: 2em;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        margin-bottom: 20px;
+      }
+
+      #finalMessage iframe {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      #finalMessage p {
+        font-family: "Arial", sans-serif;
+        color: #333;
+        font-size: 1.2em;
+        background-color: #f0f8ff;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
     </style>
   </head>
@@ -332,14 +365,21 @@
     </div>
 
     <div id="finalMessage" class="hidden">
-      <h2>Bravo ! Tu as trouvé le mot secret : DISNEY</h2>
+      <h2>
+        Bravo ! Tu as trouvé le mot secret :
+        <span style="color: #ff4081">DISNEY</span>
+      </h2>
       <iframe
         width="560"
         height="315"
-        src="https://www.youtube.com/embed/k9bUTfFF3_4"
+        src="https://www.youtube.com/embed/k9bUTfFF3_4?autoplay=1"
         frameborder="0"
         allowfullscreen
       ></iframe>
+      <p>
+        La surprise du 24 t'attend : 4 jours à Paris, avec 2 jours magiques à
+        Disneyland ! Je t'aime mon amour.
+      </p>
     </div>
 
     <script>
@@ -451,8 +491,21 @@
 
       function showFinalMessage() {
         document.getElementById("hangman").classList.add("hidden");
-        document.getElementById("finalMessage").classList.remove("hidden");
+        const finalMessage = document.getElementById("finalMessage");
+        finalMessage.classList.remove("hidden");
+
+        // Animation des éléments avec GSAP
         gsap.to("#finalMessage", { opacity: 1, duration: 1 });
+        gsap.from("#finalMessage h2", { y: -50, opacity: 0, duration: 1, delay: 0.5 });
+        gsap.from("#finalMessage iframe", { y: 50, opacity: 0, duration: 1, delay: 1 });
+        gsap.from("#finalMessage p", { y: 50, opacity: 0, duration: 1, delay: 1.5 });
+
+        // Animation de confettis
+        confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+        });
       }
     </script>
   </body>
